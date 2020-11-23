@@ -17,7 +17,7 @@ public class Payment implements Serializable {
 
     private Integer days;
 
-    public Payment(Worker worker, Integer days){
+    public Payment(WorkerDTO worker, Integer days){
         this.name = worker.getName();
         this.dailyIncome = worker.getDailyIncome();
         this.days = days;
