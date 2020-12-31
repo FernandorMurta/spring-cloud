@@ -3,6 +3,7 @@ package br.frmurta.hrpayroll.rest;
 import br.frmurta.hrpayroll.entities.Payment;
 import br.frmurta.hrpayroll.services.PaymentService;
 import br.frmurta.hrpayroll.services.PaymentServiceImpl;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,15 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
+    @HystrixCommand(fallbackMethod = "getPaymentAlternative")
     @GetMapping(value = "/{workerId}/days/{days}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Payment> getPayment(@PathVariable(value = "workerId") Long workerId,
                                               @PathVariable(value = "days") Integer days) {
         return ResponseEntity.ok(this.paymentService.getPayment(workerId, days));
+    }
+
+
+    private ResponseEntity<Payment> getPaymentAlternative( Long workerId, Integer days){
+        return ResponseEntity.ok(new Payment("Brann", 400D, days));
     }
 }
